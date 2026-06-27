@@ -1,0 +1,54 @@
+services:
+  # 1. Django REST Backend API Service
+  - type: web
+    name: nexlink-api
+    runtime: python
+    buildCommand: "cd backend-django && pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "cd backend-django && gunicorn nexlink.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.9
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nexlink-postgres-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: "*"
+
+  # 2. Node.js WebRTC Signaling & Real-Time Sync Service
+  - type: web
+    name: nexlink-signaling-server
+    runtime: node
+    buildCommand: "cd backend-node && npm install"
+    startCommand: "cd backend-node && npm start"
+    envVars:
+      - key: NODE_VERSION
+        value: 24.13.0
+      - key: PORT
+        value: 5000
+
+  # 3. React Frontend Static Site Service
+  - type: web
+    name: nexlink-frontend-app
+    runtime: static
+    buildCommand: "cd frontend && npm install && npm run build"
+    publishPath: "frontend/dist"
+    routes:
+      # Redirect all fallback routes to index.html for client-side routing
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"
+    envVars:
+      - key: NODE_VERSION
+        value: 24.13.0
+
+databases:
+  # PostgreSQL Database Instance
+  - name: nexlink-postgres-db
+    databaseName: nexlink_db
+    user: nexlink_user
+    plan: free
