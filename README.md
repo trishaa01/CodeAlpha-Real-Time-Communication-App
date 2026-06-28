@@ -1,6 +1,6 @@
-# NexLink — Real-Time Video Conferencing Platform
+# NexLink — Real-Time Communication Platform
 
-> A full-stack, multi-service video conferencing application featuring WebRTC peer-to-peer video calls, real-time collaborative whiteboard, encrypted file sharing, and live group chat — all in one room.
+> A full-stack, multi-service Real-Time communication application featuring WebRTC peer-to-peer video calls, real-time collaborative whiteboard, encrypted file sharing, and live group chat — all in one room.
 
 ---
 
