@@ -29,14 +29,11 @@ services:
       - key: PORT
         value: 10000
 
-  - type: static
+  - type: web
     name: nexlink-frontend-app
+    runtime: node
     buildCommand: "cd frontend && npm install && npm run build"
-    staticPublishPath: "frontend/dist"
-    routes:
-      - type: rewrite
-        source: "/*"
-        destination: "/index.html"
+    startCommand: "cd frontend && npx serve -s dist -l 10000"
     envVars:
       - key: NODE_VERSION
         value: 20.11.0
